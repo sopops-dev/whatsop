@@ -2,7 +2,7 @@
 
 # 📋 whatsop
 
-**How sopc, sopserve and what comes next fit together.**
+**How sopc, sopops and what comes next fit together.**
 
 The concepts behind managing instructions for many task-driven agents:<br>
 what a block is, how an agent is built from blocks, and how a change gets from an edit to a live call.
@@ -44,10 +44,9 @@ The fix is to write each piece of instruction once, build every agent from those
 | | Tool | What it is | Status |
 |---|---|---|---|
 | 📋🧩 | [sopc](https://github.com/amanmibra/sopc) | The SOP compiler. Blocks and agents as files in git; a CLI compiles prompts and checks changes. | Released |
-| 📋🗄️ | [sopserve](https://github.com/amanmibra/sopserve) | The same compiler behind a UI and a database: forms, drafts, releases, and an API agents call at start. | v0 |
-| 📋🔍 | sopqa | QA on real calls against the SOPs that were live, and suggested edits to the blocks. | Planned |
+| 📋🗄️ | [sopops](https://github.com/amanmibra/sopops) | The same compiler behind a UI and a database: forms, drafts, releases, and an API agents call at start. Coming: QA on real calls against the SOPs that were live, patterns across calls, and suggested block edits as GitHub PRs. | v0 (QA and GitHub planned) |
 
-Same concepts, same compiler. sopc is for teams who keep instructions in git; sopserve is for teams who keep config in a database and edit it in a UI.
+Same concepts, same compiler. sopc is for teams who keep instructions in git; sopops is for teams who keep config in a database and edit it in a UI.
 
 ---
 
@@ -142,9 +141,9 @@ Reading one agent tells you everything its prompt is made of. Seen across all ag
 
 <p align="center"><img src="images/overview.png" alt="A grid of agents against blocks, with checkmarks for which agent uses which block, including blocks that come through a group" width="860"></p>
 
-In sopserve, the agent page is a builder: its context, then its blocks as a stack of cards you add, reorder and open, with the compiled prompt beside it.
+In sopops, the agent page is a builder: its context, then its blocks as a stack of cards you add, reorder and open, with the compiled prompt beside it.
 
-<p align="center"><img src="images/agent-builder.png" alt="The sopserve agent builder: context, the agent's blocks as ordered cards, and the draft prompt with a diff against live" width="860"></p>
+<p align="center"><img src="images/agent-builder.png" alt="The sopops agent builder: context, the agent's blocks as ordered cards, and the draft prompt with a diff against live" width="860"></p>
 
 ## Compiling
 
@@ -161,7 +160,7 @@ flowchart LR
 
 Every compiled prompt comes with a **lock**: the prompt's hash and the exact list of blocks (and their hashes) that went into it. That's how a call can be traced back to precisely what the agent was told.
 
-The output is just text, one prompt per agent, so it works with any platform: the agent loads it from a file (sopc) or fetches it at call start (sopserve).
+The output is just text, one prompt per agent, so it works with any platform: the agent loads it from a file (sopc) or fetches it at call start (sopops).
 
 ---
 
@@ -218,14 +217,14 @@ flowchart LR
 
 ## Serving prompts at call time
 
-With sopserve, edits are **drafts** until someone publishes a **release**: an immutable snapshot of every block and every compiled prompt. Agents fetch their prompt when a call starts, so a change goes live without redeploying the agent.
+With sopops, edits are **drafts** until someone publishes a **release**: an immutable snapshot of every block and every compiled prompt. Agents fetch their prompt when a call starts, so a change goes live without redeploying the agent.
 
 <p align="center"><img src="images/changes.png" alt="Unpublished changes: one block added to an agent, and the resulting prompt diff" width="860"></p>
 
 ```mermaid
 sequenceDiagram
   participant Ed as Editor (UI)
-  participant S as sopserve
+  participant S as sopops
   participant A as Agent (call start)
   participant R as Call record (e.g. LiveKit room metadata)
   Ed->>S: save edits (drafts)
@@ -263,8 +262,8 @@ flowchart LR
   SUG -->|reviewed like any change| B
 ```
 
-- **QA (sopqa, planned).** Check calls against each SOP's goal, steps and never-do's; group violations into clusters a small team can review.
-- **Suggestions.** Turn clusters and feedback into proposed edits to specific blocks, reviewed as a normal change and gated by the same evals.
+- **QA (in sopops, planned).** Check calls against each SOP's goal, steps and never-do's; group violations into clusters a small team can review.
+- **Suggestions.** Turn clusters and feedback into proposed edits to specific blocks, opened as GitHub PRs, reviewed as a normal change and gated by the same evals.
 - **Locks (returning with suggestions).** Mark blocks that automated suggestions must never edit.
 - **Flows.** Multi-node agents (Retell conversation flows, ElevenLabs workflows, LiveKit handoffs), where each node is its own list of blocks. Waiting on real demand.
 
