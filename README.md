@@ -44,7 +44,7 @@ The fix is to write each piece of instruction once, build every agent from those
 | | Tool | What it is | Status |
 |---|---|---|---|
 | 📋🧩 | [sop](https://github.com/sopops-dev/sop) | The SOP compiler. Blocks and agents as files in git; a CLI compiles prompts and checks changes. | Released |
-| 📋🗄️ | [sopops](https://github.com/amanmibra/sopops) | The same compiler behind a UI and a database: forms, drafts, releases, and an API agents call at start. Coming: QA on real calls against the SOPs that were live, patterns across calls, and suggested block edits as GitHub PRs. | v0 (QA and GitHub planned) |
+| 📋🗄️ | [sopops](https://github.com/sopops-dev/sopops) | The same compiler behind a UI and a database: forms, drafts, releases, and an API agents call at start. Coming: QA on real calls against the SOPs that were live, patterns across calls, and suggested block edits as GitHub PRs. | v0 (QA and GitHub planned) |
 
 Same concepts, same compiler. sop is for teams who keep instructions in git; sopops is for teams who keep config in a database and edit it in a UI.
 
