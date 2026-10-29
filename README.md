@@ -2,7 +2,7 @@
 
 # 📋 whatsop
 
-**How sopc, sopops and what comes next fit together.**
+**How sop, sopops and what comes next fit together.**
 
 The concepts behind managing instructions for many task-driven agents:<br>
 what a block is, how an agent is built from blocks, and how a change gets from an edit to a live call.
@@ -43,16 +43,16 @@ The fix is to write each piece of instruction once, build every agent from those
 
 | | Tool | What it is | Status |
 |---|---|---|---|
-| 📋🧩 | [sopc](https://github.com/amanmibra/sopc) | The SOP compiler. Blocks and agents as files in git; a CLI compiles prompts and checks changes. | Released |
+| 📋🧩 | [sop](https://github.com/sopops-dev/sop) | The SOP compiler. Blocks and agents as files in git; a CLI compiles prompts and checks changes. | Released |
 | 📋🗄️ | [sopops](https://github.com/amanmibra/sopops) | The same compiler behind a UI and a database: forms, drafts, releases, and an API agents call at start. Coming: QA on real calls against the SOPs that were live, patterns across calls, and suggested block edits as GitHub PRs. | v0 (QA and GitHub planned) |
 
-Same concepts, same compiler. sopc is for teams who keep instructions in git; sopops is for teams who keep config in a database and edit it in a UI.
+Same concepts, same compiler. sop is for teams who keep instructions in git; sopops is for teams who keep config in a database and edit it in a UI.
 
 ---
 
 ## Blocks
 
-<p align="center"><img src="images/blocks.png" alt="Blocks are written once; each agent lists the blocks it uses in order after its own context; sopc compiles one prompt per agent" width="900"></p>
+<p align="center"><img src="images/blocks.png" alt="Blocks are written once; each agent lists the blocks it uses in order after its own context; sop compiles one prompt per agent" width="900"></p>
 
 A **block** is a piece of instruction written once and reused. It holds only its own content: it doesn't say which agents use it. There are two kinds.
 
@@ -160,7 +160,7 @@ flowchart LR
 
 Every compiled prompt comes with a **lock**: the prompt's hash and the exact list of blocks (and their hashes) that went into it. That's how a call can be traced back to precisely what the agent was told.
 
-The output is just text, one prompt per agent, so it works with any platform: the agent loads it from a file (sopc) or fetches it at call start (sopops).
+The output is just text, one prompt per agent, so it works with any platform: the agent loads it from a file (sop) or fetches it at call start (sopops).
 
 ---
 
@@ -178,7 +178,7 @@ flowchart LR
   EV -->|passed| M[merge / publish]
 ```
 
-**Impact.** Editing a block changes every agent that lists it, directly or through a group. `sopc plan` shows which agents change and the exact prompt diff for each:
+**Impact.** Editing a block changes every agent that lists it, directly or through a group. `sop plan` shows which agents change and the exact prompt diff for each:
 
 ```mermaid
 flowchart LR
@@ -193,17 +193,17 @@ flowchart LR
 
 | Check | Catches | Command |
 |---|---|---|
-| Validate | Broken files: unknown blocks, missing steps, unset variables | `sopc validate` |
-| Lint | The same sentence twice, a near-copy that drifted, "once" vs "twice", "always X" vs "never X" | `sopc lint` (`--strict` fails CI) |
-| Behavior gate | An agent that behaves worse after the change | `sopc affected` + your evals |
+| Validate | Broken files: unknown blocks, missing steps, unset variables | `sop validate` |
+| Lint | The same sentence twice, a near-copy that drifted, "once" vs "twice", "always X" vs "never X" | `sop lint` (`--strict` fails CI) |
+| Behavior gate | An agent that behaves worse after the change | `sop affected` + your evals |
 
 Lint compares wording, not meaning: "upsell up to 2 times" vs "never more than once" isn't caught yet.
 
 **Behavior gate.** A diff shows what text changed, not whether agents still behave. The gate runs evals only for the agents a change touches, old prompt vs new, and blocks the change on a regression, with the failing call attached:
 
-<p align="center"><img src="images/plan-and-evals.png" alt="sopc plan shows a bad edit to a shared allergen SOP reaching 4 agents, and the eval check fails on the regressed calls with the transcript" width="800"></p>
+<p align="center"><img src="images/plan-and-evals.png" alt="sop plan shows a bad edit to a shared allergen SOP reaching 4 agents, and the eval check fails on the regressed calls with the transcript" width="800"></p>
 
-**Drift.** Someone hotfixes a prompt in the platform's dashboard at 11pm, and the next deploy silently reverts it. `sopc verify` reads each agent's live prompt from ElevenLabs, Vapi or Retell and diffs it against what's compiled. Run it nightly.
+**Drift.** Someone hotfixes a prompt in the platform's dashboard at 11pm, and the next deploy silently reverts it. `sop verify` reads each agent's live prompt from ElevenLabs, Vapi or Retell and diffs it against what's compiled. Run it nightly.
 
 ```mermaid
 flowchart LR
